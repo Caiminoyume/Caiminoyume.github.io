@@ -16,15 +16,15 @@
   <meta name="author" content="江哲心">
   <meta name="keywords" content="">
   
-    <meta name="description" content="本站大史记2023&#x2F;06&#x2F;09 建立网站  2023&#x2F;07&#x2F;28 第一篇博客">
+    <meta name="description" content="本站大史记2023&#x2F;07&#x2F;28 第一篇博客  2023&#x2F;06&#x2F;09 建立网站">
 <meta property="og:type" content="website">
 <meta property="og:title" content="关于">
 <meta property="og:url" content="https://caiminoyume.github.io/about/">
 <meta property="og:site_name" content="柴米の拾光">
-<meta property="og:description" content="本站大史记2023&#x2F;06&#x2F;09 建立网站  2023&#x2F;07&#x2F;28 第一篇博客">
+<meta property="og:description" content="本站大史记2023&#x2F;07&#x2F;28 第一篇博客  2023&#x2F;06&#x2F;09 建立网站">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-07-28T08:50:01.298Z">
-<meta property="article:modified_time" content="2023-07-28T08:50:01.298Z">
+<meta property="article:published_time" content="2023-07-30T07:24:35.854Z">
+<meta property="article:modified_time" content="2023-07-30T07:24:35.854Z">
 <meta property="article:author" content="江哲心">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -124,18 +124,6 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/archives/">
-                <i class="iconfont icon-archive-fill"></i>
-                <span>归档</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
               <a class="nav-link" href="/categories/">
                 <i class="iconfont icon-category-fill"></i>
                 <span>分类</span>
@@ -151,6 +139,18 @@
               <a class="nav-link" href="/tags/">
                 <i class="iconfont icon-tags-fill"></i>
                 <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
               </a>
             </li>
           
@@ -251,11 +251,11 @@
 
 <article class="about-content page-content mt-5">
   <div class="markdown-body">
-    <h2 id="本站大史记"><a href="#本站大史记" class="headerlink" title="本站大史记"></a>本站大史记</h2><h5 id="2023-06-09"><a href="#2023-06-09" class="headerlink" title="2023&#x2F;06&#x2F;09"></a>2023&#x2F;06&#x2F;09</h5><ul>
-<li>建立网站</li>
-</ul>
-<h5 id="2023-07-28"><a href="#2023-07-28" class="headerlink" title="2023&#x2F;07&#x2F;28"></a>2023&#x2F;07&#x2F;28</h5><ul>
+    <h2 id="本站大史记"><a href="#本站大史记" class="headerlink" title="本站大史记"></a>本站大史记</h2><h5 id="2023-07-28"><a href="#2023-07-28" class="headerlink" title="2023&#x2F;07&#x2F;28"></a>2023&#x2F;07&#x2F;28</h5><ul>
 <li>第一篇博客</li>
+</ul>
+<h5 id="2023-06-09"><a href="#2023-06-09" class="headerlink" title="2023&#x2F;06&#x2F;09"></a>2023&#x2F;06&#x2F;09</h5><ul>
+<li>建立网站</li>
 </ul>
 
   </div>
@@ -284,6 +284,12 @@
 
 
   
+
+
+  
+  
+
+
 
 
 
@@ -440,6 +446,49 @@
 
 
   <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
 
   <script  src="/js/local-search.js" ></script>
 

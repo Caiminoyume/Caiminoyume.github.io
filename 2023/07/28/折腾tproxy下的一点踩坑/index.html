@@ -24,12 +24,10 @@
 <meta property="og:description" content="起因其实早在三天前我就打算写出第一篇博客了，但是由于我国互联网的特殊性，导致安装 hexo 出现了“一点点”小意外。虽然只需要设置一下命令行代理就能搞定 set http_proxy&#x3D;http:&#x2F;&#x2F;ip:port 但是这件事给我了足够的动力去折腾透明网关。其实早就想搞的，拖延症+懒，就。。。 技术介绍tproxy，意为透明代理&#x2F;透明网关，通过在路由器上运行代理软件并劫持局域网内所有流量便">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-07-28T06:15:06.000Z">
-<meta property="article:modified_time" content="2023-07-28T08:29:07.052Z">
+<meta property="article:modified_time" content="2023-08-02T10:23:10.946Z">
 <meta property="article:author" content="江哲心">
-<meta property="article:tag" content="network">
-<meta property="article:tag" content="tproxy">
-<meta property="article:tag" content="xray">
-<meta property="article:tag" content="iptables">
+<meta property="article:tag" content="Network">
+<meta property="article:tag" content="Tproxy">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -128,18 +126,6 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/archives/">
-                <i class="iconfont icon-archive-fill"></i>
-                <span>归档</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
               <a class="nav-link" href="/categories/">
                 <i class="iconfont icon-category-fill"></i>
                 <span>分类</span>
@@ -155,6 +141,18 @@
               <a class="nav-link" href="/tags/">
                 <i class="iconfont icon-tags-fill"></i>
                 <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
               </a>
             </li>
           
@@ -321,17 +319,34 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%AE%B0%E5%BD%95/" class="category-chain-item">记录</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
   
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/network/" class="print-no-link">#network</a>
+        <a href="/tags/Network/" class="print-no-link">#Network</a>
       
-        <a href="/tags/tproxy/" class="print-no-link">#tproxy</a>
-      
-        <a href="/tags/xray/" class="print-no-link">#xray</a>
-      
-        <a href="/tags/iptables/" class="print-no-link">#iptables</a>
+        <a href="/tags/Tproxy/" class="print-no-link">#Tproxy</a>
       
     </div>
   
@@ -387,6 +402,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2023/08/02/TLS%20%E6%8A%80%E6%9C%AF%E9%89%B4%E8%B5%8F%20%E2%80%94%E2%80%94%201.%20TLS%20%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/" title="TLS 技术鉴赏 —— 1. TLS 的基本原理">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">TLS 技术鉴赏 —— 1. TLS 的基本原理</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
@@ -444,6 +465,12 @@
 
 
   
+
+
+  
+  
+
+
 
 
 
@@ -637,6 +664,49 @@
 
 
   <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
 
   <script  src="/js/local-search.js" ></script>
 
