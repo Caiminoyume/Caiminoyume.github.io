@@ -16,24 +16,23 @@
   <meta name="author" content="江哲心">
   <meta name="keywords" content="">
   
-    <meta name="description" content="前言最近一直在看关于网络通信的书，正好趁此博客刚刚开站，打算写一系列的文章。若是没人看，权当作笔记了吧。说不定几篇之后就没动力写了 其实网络通信可讲的太多，不过笔者认为，研究网络安全，在攻防角色间相互代换，可称为颇有一番乐趣的智力游戏。于是乎，第一篇的主题就定下来了 要讨论通信安全，那就不得不先谈密码学了，要达成安全的目的，必然与密码有千丝万缕的联系。不过本篇由于只讲基本原理，并不会对具体的密码算">
+    <meta name="description" content="前言老实说，我本不打算写这篇博客的：因为没有推广的价值，它本质是利用了 GFW 的一个漏洞，如果这漏洞被修复，该方法自然失效 但是我在谷歌对应资料的时候，意外地了解到这个“漏洞”历史意外的悠久？，居然能追溯到 2017 年。看来此方法可能能使用很长一段时间，因此写下此文。反正我的博客也没什么人看 原理要说这个漏洞也简单，GFW 没有阻断 QUIC 流量的 YouTube 视频流的域名(google">
 <meta property="og:type" content="article">
-<meta property="og:title" content="TLS 技术鉴赏 —— 1. TLS 的基本原理">
-<meta property="og:url" content="https://caiminoyume.github.io/2023/08/02/TLS%20%E6%8A%80%E6%9C%AF%E9%89%B4%E8%B5%8F%20%E2%80%94%E2%80%94%201.%20TLS%20%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/">
+<meta property="og:title" content="http3直连YouTube观影？">
+<meta property="og:url" content="https://caiminoyume.github.io/http3%E7%9B%B4%E8%BF%9EYouTube%E8%A7%82%E5%BD%B1%EF%BC%9F/">
 <meta property="og:site_name" content="柴米の拾光">
-<meta property="og:description" content="前言最近一直在看关于网络通信的书，正好趁此博客刚刚开站，打算写一系列的文章。若是没人看，权当作笔记了吧。说不定几篇之后就没动力写了 其实网络通信可讲的太多，不过笔者认为，研究网络安全，在攻防角色间相互代换，可称为颇有一番乐趣的智力游戏。于是乎，第一篇的主题就定下来了 要讨论通信安全，那就不得不先谈密码学了，要达成安全的目的，必然与密码有千丝万缕的联系。不过本篇由于只讲基本原理，并不会对具体的密码算">
+<meta property="og:description" content="前言老实说，我本不打算写这篇博客的：因为没有推广的价值，它本质是利用了 GFW 的一个漏洞，如果这漏洞被修复，该方法自然失效 但是我在谷歌对应资料的时候，意外地了解到这个“漏洞”历史意外的悠久？，居然能追溯到 2017 年。看来此方法可能能使用很长一段时间，因此写下此文。反正我的博客也没什么人看 原理要说这个漏洞也简单，GFW 没有阻断 QUIC 流量的 YouTube 视频流的域名(google">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-08-02T10:26:06.000Z">
-<meta property="article:modified_time" content="2023-08-02T11:39:27.055Z">
+<meta property="article:published_time" content="2023-08-29T11:36:29.000Z">
+<meta property="article:modified_time" content="2023-09-25T13:11:09.239Z">
 <meta property="article:author" content="江哲心">
 <meta property="article:tag" content="Network">
-<meta property="article:tag" content="TLS">
-<meta property="article:tag" content="Secure">
+<meta property="article:tag" content="QUIC">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>TLS 技术鉴赏 —— 1. TLS 的基本原理 - 柴米の拾光</title>
+  <title>http3直连YouTube观影？ - 柴米の拾光</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -170,6 +169,18 @@
             </li>
           
         
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
         
           <li class="nav-item" id="search-btn">
             <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
@@ -199,7 +210,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="TLS 技术鉴赏 —— 1. TLS 的基本原理"></span>
+            <span id="subtitle" data-typed-text="http3直连YouTube观影？"></span>
           
         </div>
 
@@ -210,8 +221,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-08-02 18:26" pubdate>
-          2023年8月2日 晚上
+        <time datetime="2023-08-29 19:36" pubdate>
+          2023年8月29日 晚上
         </time>
       </span>
     
@@ -222,7 +233,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.1k 字
+          1.7k 字
         
       </span>
     
@@ -233,7 +244,7 @@
         
         
         
-          26 分钟
+          14 分钟
         
       </span>
     
@@ -270,82 +281,51 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">TLS 技术鉴赏 —— 1. TLS 的基本原理</h1>
+            <h1 id="seo-header">http3直连YouTube观影？</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>最近一直在看关于网络通信的书，正好趁此博客刚刚开站，打算写一系列的文章。若是没人看，权当作笔记了吧。<del>说不定几篇之后就没动力写了</del></p>
-<p>其实网络通信可讲的太多，不过笔者认为，研究网络安全，在攻防角色间相互代换，可称为颇有一番乐趣的智力游戏。于是乎，第一篇的主题就定下来了</p>
-<p>要讨论通信安全，那就不得不先谈密码学了，要达成安全的目的，必然与密码有千丝万缕的联系。不过本篇由于只讲基本原理，并不会对具体的密码算法有过多的讲解，针对下面要讲到的加密方式，将其理解为概念上完美的加密方式即可（即，在不知道密钥的前提下，绝无可能破译）</p>
-<h1 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h1><h3 id="对称加密算法"><a href="#对称加密算法" class="headerlink" title="对称加密算法"></a>对称加密算法</h3><p>对称加密很好理解，即双方使用同样的密钥进行加密和解密。用数学的语言表述如下：</p>
-<p>$c&#x3D;K(p)$<br>$K(c)&#x3D;K(K(p))&#x3D;p$</p>
-<p>上述式子中，$p$ 即明文（plaintext），$c$ 即密文（ciphertext），$K$ 即密钥（key），通过密钥对明文加密得到密钥</p>
-<h3 id="不对称加密算法"><a href="#不对称加密算法" class="headerlink" title="不对称加密算法"></a>不对称加密算法</h3><p>不对称加密具有一种特殊的性质，即它使用一个密钥对，私钥加密而公钥解密，公钥加密而私钥解密，公钥&#x2F;私钥都无法对自己加密的内容解密<br>再一次，用数学的语言表达如下：</p>
-<p>$K^+(K^-(p))&#x3D;p$<br>$K^-(K^+(p))&#x3D;p$</p>
-<p>在数学上，密钥对实际没有区别，习惯上，我们将公开出去的密钥叫公钥（publickey），而自己持有的密钥叫私钥（privatekey），式子中，将公钥用 $K^+$ 表示，私钥用 $K^-$ 表示</p>
-<ul>
-<li>由于不对称加密算法资源消耗大，实践中一般不直接用来加密报文，而是用来传递对称加密的密钥</li>
-</ul>
-<h3 id="哈希算法"><a href="#哈希算法" class="headerlink" title="哈希算法"></a>哈希算法</h3><p>虽然哈希算法不能叫加密算法，但它在验证原文的完整性时非常重要，也是通信安全中必不可少的一位，因此将它放在这里<br>哈希算法具有这些性质：</p>
-<ol>
-<li>对于任意报文 $m$，都能生成固定长度的字符串（哈希值） $H(m)$</li>
-<li>对于相同的报文 $m$，总是能生成相同的哈希值 $H(m)$</li>
-<li>找到任意两个不同的报文 $x$ 和 $y$，使 $H(x)&#x3D;H(y)$，在计算上是不可能的</li>
-</ol>
-<p>显然哈希算法的输入和输出不是一一对应的，必然会有相当多的报文 $m_1,m_2,\ldots$ 的哈希值相同（这种现象被称为<strong>哈希碰撞</strong>），只是我们无法在合理的时间内根据 $m_1$ 去计算其他和它哈希值相等的报文。这也正是第三条表达的意思</p>
-<h3 id="数字签名"><a href="#数字签名" class="headerlink" title="数字签名"></a>数字签名</h3><p>数字签名是由哈希算法和不对称加密算法结合起来的产物。签名者将报文的哈希值用自己的私钥加密（该加密数据即为<strong>数字签名</strong>），并同报文一起发送给接受者。接受者使用公钥解密，并验证哈希值，即可知晓报文是否被篡改以及验证发送者的身份</p>
-<h3 id="一条加密隧道应该具有的性质"><a href="#一条加密隧道应该具有的性质" class="headerlink" title="一条加密隧道应该具有的性质"></a>一条加密隧道应该具有的性质</h3><p>好了，有了上面这些的工具后，是时候考虑如何建立一条可靠的隧道了，这条隧道应该具有以下性质：</p>
-<ol>
-<li>机密性：密文无法被窃听者理解</li>
-<li>完整性：密文没有被恶意篡改</li>
-<li>端点鉴别：通信双方都要能证实另一方的身份</li>
-</ol>
-<p>接下来开始头脑风暴！</p>
-<h1 id="如何创立可靠的加密信道"><a href="#如何创立可靠的加密信道" class="headerlink" title="如何创立可靠的加密信道"></a>如何创立可靠的加密信道</h1><p>现在设想一台主机 $C$，它现在要去访问名叫 <code>www.example.com</code> 的服务器，开始构想一种方式使它与服务器的通信免受骇客的侵扰吧！</p>
-<h3 id="加密1-0：使用对称加密"><a href="#加密1-0：使用对称加密" class="headerlink" title="加密1.0：使用对称加密"></a>加密1.0：使用对称加密</h3><p>主机 $C$ 运气很好，它一开始就和 <code>www.example.com</code> 拥有同样的（而且只有它们俩知道）对称加密密钥，那事情变得非常简单了，直接使用密钥加密就能保证安全</p>
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>老实说，我本不打算写这篇博客的：因为没有推广的价值，它本质是利用了 GFW 的一个漏洞，如果这漏洞被修复，该方法自然失效</p>
+<p>但是我在谷歌对应资料的时候，意外地了解到这个“漏洞”<a target="_blank" rel="noopener" href="https://www.v2ex.com/t/370189?p=1">历史意外的悠久？</a>，居然能追溯到 2017 年。看来此方法可能能使用很长一段时间，因此写下此文。<del>反正我的博客也没什么人看</del></p>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>要说这个漏洞也简单，GFW 没有阻断 QUIC 流量的 YouTube 视频流的域名(googlevideo.com)，根据 GFW 目前的手段来看，此域名处于如下状态：</p>
+<table>
+<thead>
+<tr>
+<th>DNS 污染</th>
+<th>路由黑洞</th>
+<th>TLS SNI 阻断</th>
+<th>QUIC SNI 阻断</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>yes</td>
+<td>no</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+</tbody></table>
 <blockquote>
-<p>$client\stackrel{K(p)}{\Longleftarrow&#x3D;&#x3D;\Longrightarrow}server$</p>
+<p>9月25日补充：该域名下部分 ipv4 是路由黑洞，建议 DNS 模块只返回 ipv6 的地址</p>
 </blockquote>
-<p>但是这种情况是极其少见的，在很多情况下，主机 $C$ 可能是首次和 <code>www.example.com</code> 取得联系<br>并且由一方生成密钥并传输过去也是不行的，在公网上明文传输密钥是极可能被骇客截获，以后的通信就毫无安全可言了</p>
-<h3 id="加密2-0：使用不对称加密"><a href="#加密2-0：使用不对称加密" class="headerlink" title="加密2.0：使用不对称加密"></a>加密2.0：使用不对称加密</h3><p>那么使用不对称加密又如何呢？比如由服务器分发公钥（公钥是可以被任何人知道的），这样主机 $C$ 可以在本地生成对称加密的密钥 $k$，并使用公钥加密传递给服务器了</p>
-<blockquote>
-<p>$client\stackrel{K^+(k)}{&#x3D;&#x3D;&#x3D;\Longrightarrow}server$</p>
-</blockquote>
-<p>很不幸，一个聪明的骇客拦截了服务器发往主机 $C$ 的公钥 $K_{s}^+$，并替换为自己的公钥 $K_{h}^+$，如此，密钥就能被骇客截获</p>
-<blockquote>
-<p>$client\stackrel{K_{h}^{+}(k)}{&#x3D;&#x3D;&#x3D;&#x3D;\Longrightarrow}cracker\stackrel{K_{s}^{+}(k)}{&#x3D;&#x3D;&#x3D;&#x3D;\Longrightarrow}server$</p>
-</blockquote>
-<h3 id="加密3-0：引入-CA"><a href="#加密3-0：引入-CA" class="headerlink" title="加密3.0：引入 CA"></a>加密3.0：引入 CA</h3><p>实际上可以注意到，如果主机 $C$ 除对域名 <code>www.example.com</code> 外，对要访问的服务器一无所知的话，任何加密都是无法验证服务器身份的。就好比你声称要见一个叫“小明”的人，而完全不知道其声音、外貌等等，那么任何人都可以声称自己是“小明”来欺骗你</p>
-<p>但在实际中，主机要去访问一个第一次知道的网站的情况十分常见，<del>比如你现在多半也是第一次见到这个域名，进入笔者的博客</del></p>
-<p>那么，一种自然的想法就是，既然你不可能认识世界上所有人，那么为了保证你见到的人就是“小明”，需要一个神通广大且可靠的朋友作为中介。而在计算机网络里，这个中介就是<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/zh-sg/%E8%AF%81%E4%B9%A6%E9%A2%81%E5%8F%91%E6%9C%BA%E6%9E%84">CA</a>（数字证书认证机构，Certificate Authority）</p>
-<h4 id="CA-如何验证身份？"><a href="#CA-如何验证身份？" class="headerlink" title="CA 如何验证身份？"></a>CA 如何验证身份？</h4><p>事实上是，当主机 C 要访问 <code>www.example.com</code> 时，并不会事先去联系 CA（想象一下全世界那么多主机每次访问网站前都要联系 CA 是多么可怕的事），而是由网站的服务器给出 CA 颁发的证书（digital certificate），这“张”证书包含以下数据：</p>
-<ul>
-<li>CA 机构的名称</li>
-<li>服务器的域名</li>
-<li>服务器公钥</li>
-<li>证书的数字签名</li>
-<li>证书的有效期</li>
-<li>其他（主要是协议版本和加解密算法等等）</li>
-</ul>
-<p>那么当主机 $C$ 收到这张证书时会干什么事呢？首先，它会使用证书上的对应 CA 的公钥解密数字签名并验证证书，确定证书的有效性后，提取服务器域名和公钥，后续就可以使用该公钥传递对称加密密钥建立加密信道了</p>
-<p>但是这里似乎有个疑惑，CA 的公钥是从哪里来的呢？答案是，<strong>内置</strong>！在安装浏览器&#x2F;操作系统时，会自带可信任的 CA 名称及其公钥，这样即可达成信任链，完成对证书的验证</p>
-<ul>
-<li>由于 CA 机构的地位，某些流氓浏览器可能会内置一些不具有权威性的 CA，请勿使用除Edge，Chrome，Firefox等大厂以外的浏览器！</li>
-<li>某些恶意软件取得操作系统管理员权限后，也可能安装信任一些不友好的证书！</li>
-<li>一旦信任链一环出现问题，黑客就有可能做到窃听乃至劫持！</li>
-</ul>
-<h4 id="CA机构的风险"><a href="#CA机构的风险" class="headerlink" title="CA机构的风险"></a>CA机构的风险</h4><p>在上述过程中，不难察觉到 CA 的权力过于集中，不免引起人们的担忧：一旦 CA 作恶，后果不堪设想</p>
-<p>CA 可能的风险：</p>
+<p>这就给了我们钻漏洞的机会：</p>
 <ol>
-<li><a target="_blank" rel="noopener" href="https://security.googleblog.com/2015/10/sustaining-digital-certificate-security.html">机构人员因某些原因（失误或腐败接受贿赂等）颁发伪造证书</a></li>
-<li>CA 遭受骇客入侵，伪造证书</li>
-<li>CA 受政府压力，给予伪造证书（棱镜门事件中，美国政府可能强迫 CA 为他们颁发假证书）</li>
+<li>开启浏览器的 QUIC 支持</li>
+<li>使用未被污染的 DNS<br>这样视频流的流量就会通过 QUIC 直连到 YouTube 的 CDN</li>
 </ol>
-<p>关键是，一个中心化的机构总是无法避免此类情况的发生，人们无法完全相信一个集权的机构</p>
-<h3 id="加密4-0：CT制度"><a href="#加密4-0：CT制度" class="headerlink" title="加密4.0：CT制度"></a>加密4.0：CT制度</h3><p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/zh-cn/%E8%AF%81%E4%B9%A6%E9%80%8F%E6%98%8E%E5%BA%A6">CT</a>（证书透明，Certificate Transparency），通过将证书颁发等操作公开，受任何人监督，达到无法篡改和伪造证书的目的</p>
-<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>如此一来，一条加密信道就在理论上建立起来了</p>
-<p>下面笔者可能（<del>也可能没有，咕咕咕</del>）会花几篇的文章详细讲解 TLS 的具体技术细节，通过预演可能遭到的攻击来梳理 TLS 各种设计的逻辑，敬请期待吧</p>
+<p>不过很遗憾，普通的 HTTP 代理或者 socks 代理均不支持代理 QUIC 流量，当浏览器启用了代理，就不会尝试使用 QUIC 进行连接，因此浏览器一定要保持没有代理的状态</p>
+<p>不过浏览器不代理，显然是打不开 YouTube 的，那视频流也无从谈起了，这样变成了先有鸡还是先有蛋的问题了。有没有一种情况能仅代理 <code>www.youtube.com</code> 而不代理 <code>*.googlevideo.com</code> 且不开启系统代理的呢</p>
+<p>这就是透明代理了，在使用 tun&#x2F;tproxy 的情况下，处理 DNS 请求并分流这两个域名，便可实现</p>
+<h1 id="操作方法"><a href="#操作方法" class="headerlink" title="操作方法"></a>操作方法</h1><h2 id="启用-QUIC"><a href="#启用-QUIC" class="headerlink" title="启用 QUIC"></a>启用 QUIC</h2><p>如果你使用 edge 浏览器，在地址栏输入 <a href="edge://flags">edge:&#x2F;&#x2F;flags</a>，并在随后出现页面的搜索栏里键入 <code>quic</code>，找到 <code>Experimental QUIC protocol</code> 项设置为 <code>Enabled</code> 并重启浏览器<br>如果你使用 chrome 浏览器，只需输入 <a href="chrome://flags">chrome:&#x2F;&#x2F;flags</a>，其余操作与上述相同</p>
+<h2 id="使用未污染的-DNS"><a href="#使用未污染的-DNS" class="headerlink" title="使用未污染的 DNS"></a>使用未污染的 DNS</h2><p>在使用 tun&#x2F;tproxy 时，浏览器首先会发起 DNS 请求再开始连接，GFW 通过返回虚假的 IP 地址来阻断对被墙的域名的访问（DNS 污染）。通过 tun&#x2F;tproxy 处理 DNS 请求，使其获取“干净”的 IP。可以考虑使用 DoT 或者 DoH，或者直接代理 DNS 请求，避免 GFW 污染 DNS 查询结果</p>
+<p>如果你时 tproxy 的玩家，想必都不用我说已经知道怎么做了；下面主要说一下 tun 模式的玩法</p>
+<p>tun 是一种仅单机的提供透明代理的方式，在某些软件并不会遵循系统代理的情况下，使用 tun 强制其流量进入代理软件，便是 tun 最强大的地方（如果你的节点延迟很低，并且在玩外服游戏，就可以考虑使用 tun 代理游戏流量，降低延迟）</p>
+<p>首先确认你使用的代理工具是否支持 tun （clashforwindows和v2rayN）均支持开启 tun 模式。开启 tun 的操作自行谷歌，此处不再赘述</p>
+<p>在 tun 模式下，尤其需要注意 DNS 的处理，注意不要将 <code>*.googlevideo.com</code> 的域名使用国内的 DNS 进行查询（哪怕它是 DoT&#x2F;DoH），可以使用 <code>dns.google</code> 的 DoT （<code>dns.google</code> 据说可以直连了，不过还是得根据地区和以后 GFW 的政策来看，如果不行，就代理 DNS 查询）</p>
+<p>如此，即获取到真正的 <code>*.googlevideo.com</code> 的 IP 地址</p>
+<h2 id="附"><a href="#附" class="headerlink" title="附"></a>附</h2><p>如果你确保上述操作正确的话（特别注意关闭系统代理），如果打开 YouTube 的视频一直无法加载，可能浏览器依然首先尝试了一般的 TLS 连接，具体无法确定原因，解决方法暂无（多刷新几次&#x2F;重启浏览器&#x2F;重启电脑 可能在某次就进行 QUIC 连接了），不过一旦浏览器开始 QUIC 连接后，后续非常稳定</p>
+<h1 id="有何优点？"><a href="#有何优点？" class="headerlink" title="有何优点？"></a>有何优点？</h1><p>如果你是自建节点，单点大流量的特征是无论如何无法避免的，将 YouTube 视频流量直连，可减少经过代理的流量，降低风险</p>
+<p>而如果你节点速度不佳，直连 YouTube 可能大幅提升观影体验（如果 YouTube 给你分配了 HK 的 CDN 的话，甚至能跑到 20w+，不过目前分配机制较迷，有时也会分配荷兰或者洛杉矶等地的 CDN） </p>
 
                 
               </div>
@@ -364,15 +344,8 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E6%8A%80%E6%9C%AF%E9%89%B4%E8%B5%8F/" class="category-chain-item">技术鉴赏</a>
+  <a href="/categories/%E8%AE%B0%E5%BD%95/" class="category-chain-item">记录</a>
   
-  
-    <span>></span>
-    
-  <a href="/categories/%E6%8A%80%E6%9C%AF%E9%89%B4%E8%B5%8F/TLS/" class="category-chain-item">TLS</a>
-  
-  
-
   
 
       </span>
@@ -388,9 +361,7 @@
       
         <a href="/tags/Network/" class="print-no-link">#Network</a>
       
-        <a href="/tags/TLS/" class="print-no-link">#TLS</a>
-      
-        <a href="/tags/Secure/" class="print-no-link">#Secure</a>
+        <a href="/tags/QUIC/" class="print-no-link">#QUIC</a>
       
     </div>
   
@@ -402,8 +373,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>TLS 技术鉴赏 —— 1. TLS 的基本原理</div>
-      <div>https://caiminoyume.github.io/2023/08/02/TLS 技术鉴赏 —— 1. TLS 的基本原理/</div>
+      <div>http3直连YouTube观影？</div>
+      <div>https://caiminoyume.github.io/http3直连YouTube观影？/</div>
     </div>
     <div class="license-meta">
       
@@ -415,7 +386,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年8月2日</div>
+          <div>2023年8月29日</div>
         </div>
       
       
@@ -426,9 +397,15 @@
             
               
               
-                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">
                   <span class="hint--top hint--rounded" aria-label="BY - 署名">
                     <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-nc"></i>
                   </span>
                 </a>
               
@@ -447,9 +424,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/08/29/http3%E7%9B%B4%E8%BF%9EYouTube%E8%A7%82%E5%BD%B1%EF%BC%9F/" title="http3直连YouTube观影？">
+                      <a href="/%E6%88%91%E6%9C%89%E7%89%B9%E6%AE%8A%E7%9A%84%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E9%85%8D%E7%BD%AE%E5%92%8C%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/" title="我有特殊的透明代理配置和使用技巧">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">http3直连YouTube观影？</span>
+                        <span class="hidden-mobile">我有特殊的透明代理配置和使用技巧</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -457,8 +434,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/07/28/%E6%8A%98%E8%85%BEtproxy%E4%B8%8B%E7%9A%84%E4%B8%80%E7%82%B9%E8%B8%A9%E5%9D%91/" title="折腾tproxy下的一点踩坑">
-                        <span class="hidden-mobile">折腾tproxy下的一点踩坑</span>
+                      <a href="/TLS%20%E6%8A%80%E6%9C%AF%E9%89%B4%E8%B5%8F%20%E2%80%94%E2%80%94%201.%20TLS%20%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/" title="TLS 技术鉴赏 —— 1. TLS 的基本原理">
+                        <span class="hidden-mobile">TLS 技术鉴赏 —— 1. TLS 的基本原理</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
