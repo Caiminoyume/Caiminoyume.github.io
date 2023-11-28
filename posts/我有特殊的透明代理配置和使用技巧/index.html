@@ -23,15 +23,12 @@
 <meta property="og:site_name" content="柴米の拾光">
 <meta property="og:description" content="鉴于大部分人在透明代理中对 DNS 的行为一知半解，而 DNS 作为互联网连接的第一步，却被许多人一直忽视，令我感到十分不可思议。合理的 DNS 处理不仅能提高核心性能，防止代理 BT 流量，甚至能绕过 GFW 的封锁，实现 no-proxy 访问（本文并未涉及，敬请期待之后的文章） 讨论的范围 假设需要做 proxy direct block 三种类型的分流，且已有完善的 geosite 本文仅">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://caiminoyume.github.io/img/%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%911.png">
-<meta property="og:image" content="https://caiminoyume.github.io/img/%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%912.png">
 <meta property="article:published_time" content="2023-10-06T12:24:31.000Z">
-<meta property="article:modified_time" content="2023-10-16T00:16:31.506Z">
+<meta property="article:modified_time" content="2023-11-28T13:03:38.081Z">
 <meta property="article:author" content="江哲心">
 <meta property="article:tag" content="Network">
 <meta property="article:tag" content="Tproxy">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://caiminoyume.github.io/img/%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%911.png">
   
   
   
@@ -236,7 +233,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.5k 字
+          5.9k 字
         
       </span>
     
@@ -247,7 +244,7 @@
         
         
         
-          47 分钟
+          50 分钟
         
       </span>
     
@@ -286,6 +283,14 @@
           <article class="post-content mx-auto">
             <h1 id="seo-header">我有特殊的透明代理配置和使用技巧</h1>
             
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2023年11月28日 晚上
+                  
+                
+              </p>
+            
             
               <div class="markdown-body">
                 
@@ -300,11 +305,25 @@
 <p>如果不了解 HTTPS 记录，可以参考 <a target="_blank" rel="noopener" href="https://taoshu.in/dns/dns-svcb-https.html">这篇文章</a></p>
 </blockquote>
 <p>总结一下，A&#x2F;AAAA 记录获取域名的 ipv4 和 ipv6 地址，HTTPS 记录获取域名的 alpn 和 ECH 信息</p>
-<h1 id="传统透明代理的局限性"><a href="#传统透明代理的局限性" class="headerlink" title="传统透明代理的局限性"></a>传统透明代理的局限性</h1><p>大部分人透明代理的网络拓扑可能类似这样：<br><img src="/img/%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%911.png" srcset="/img/loading.gif" lazyload alt="网络拓扑1"><br>注意到一些本无需经过 core 的流量进入了 core，增大了性能消耗<br>同时，劫持所有流量也会劫持到 BT 流量，以至于不得不采取其他方式规避</p>
+<h1 id="传统透明代理的局限性"><a href="#传统透明代理的局限性" class="headerlink" title="传统透明代理的局限性"></a>传统透明代理的局限性</h1><p>大部分人透明代理的网络拓扑可能类似这样：</p>
+<pre><code class=" mermaid">flowchart LR
+浏览器DNS请求 --&gt; 代理客户端劫持DNS请求并返回结果 --&gt; 浏览器发起请求 --&gt; 代理客户端劫持请求并分流
+代理客户端劫持请求并分流 --&gt; 代理
+代理客户端劫持请求并分流 --&gt; 直连
+代理客户端劫持请求并分流 --&gt; 阻断
+</code></pre>
+<p>注意到一些本无需经过 core 的流量进入了 core，增大了性能消耗<br>同时，劫持所有流量也会劫持到 BT 流量，以至于不得不采取其他方式规避</p>
 <blockquote>
 <p>为什么不推荐代理 BT 流量可自行搜索</p>
 </blockquote>
-<h1 id="一点特殊的技巧"><a href="#一点特殊的技巧" class="headerlink" title="一点特殊的技巧"></a>一点特殊的技巧</h1><p>由于 HTTP(S) 访问之前基本都会发起 DNS 查询，因此使用 fakeip 不仅可以避免不必要的 DNS 查询，同时可避免 core 劫持额外的流量带来的性能消耗<br>如下图所示：<br><img src="/img/%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%912.png" srcset="/img/loading.gif" lazyload alt="网络拓扑2"><br>注意到在此种模式下，block流量直接在本机处理，direct 流量也直接经路由器（而不是 core）转发到外网，大大减少 core 的处理压力<br>同时，BT 流量因为既不会发起 DNS 请求，也不会出现在 fakeip 段内，自然也不会经过 core！</p>
+<h1 id="一点特殊的技巧"><a href="#一点特殊的技巧" class="headerlink" title="一点特殊的技巧"></a>一点特殊的技巧</h1><p>由于 HTTP(S) 访问之前基本都会发起 DNS 查询，因此使用 fakeip 不仅可以避免不必要的 DNS 查询，同时可避免 core 劫持额外的流量带来的性能消耗<br>如下图所示：</p>
+<pre><code class=" mermaid">flowchart LR
+    浏览器DNS请求--&gt;代理客户端劫持DNS请求
+    代理客户端劫持DNS请求--&gt;代理--&gt;返回fakeip--&gt;浏览器发起请求--&gt;core仅劫持fakeip段
+    代理客户端劫持DNS请求--&gt;直连--&gt;返回真实ip--&gt;浏览器发起请求--&gt;直接连接服务器不经过core
+    代理客户端劫持DNS请求--&gt;阻断--&gt;返回空解析--&gt;浏览器发起请求--&gt;无解析无法发起请求
+</code></pre>
+<p>注意到在此种模式下，block流量直接在本机处理，direct 流量也直接经路由器（而不是 core）转发到外网，大大减少 core 的处理压力<br>同时，BT 流量因为既不会发起 DNS 请求，也不会出现在 fakeip 段内，自然也不会经过 core！</p>
 <h1 id="如何实践？"><a href="#如何实践？" class="headerlink" title="如何实践？"></a>如何实践？</h1><p>下面以 sing-box 为例，进行实操：</p>
 <p>以下是 iptables 示例</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs bash">ip rule add fwmark 1 table 100<br>ip route add <span class="hljs-built_in">local</span> 0.0.0.0/0 dev lo table 100<br>iptables -t mangle -N SINGBOX<br>iptables -t mangle -A SINGBOX -m mark --mark 2 -j RETURN<br>iptables -t mangle -A SINGBOX -p udp --dport 53 -j TPROXY --on-port 12345 --tproxy-mark 1<br>iptables -t mangle -A SINGBOX -p tcp --dport 53 -j TPROXY --on-port 12345 --tproxy-mark 1<br>iptables -t mangle -A SINGBOX -d 127.0.0.0/8 -j RETURN<br>iptables -t mangle -A SINGBOX -d 198.18.0.0/16 -p tcp -j TPROXY --on-port 12345 --tproxy-mark 1<br>iptables -t mangle -A SINGBOX -d 198.18.0.0/16 -p udp -j TPROXY --on-port 12345 --tproxy-mark 1<br>iptables -t mangle -A PREROUTING -j SINGBOX<br><br>iptables -t mangle -N SINGBOX_SELF<br>iptables -t mangle -A SINGBOX_SELF -m mark --mark 2 -j RETURN<br>iptables -t mangle -A SINGBOX_SELF -d 198.18.0.0/16 -p udp -j MARK --set-mark 1<br>iptables -t mangle -A SINGBOX_SELF -d 198.18.0.0/16 -p tcp -j MARK --set-mark 1<br>iptables -t mangle -A OUTPUT -j SINGBOX_SELF<br><br>ip -6 rule add fwmark 1 table 106<br>ip -6 route add <span class="hljs-built_in">local</span> ::/0 dev lo table 106<br>ip6tables -t mangle -N SINGBOX6<br>ip6tables -t mangle -A SINGBOX6 -m mark --mark 2 -j RETURN<br>ip6tables -t mangle -A SINGBOX6 -p udp --dport 53 -j TPROXY --on-port 12345 --tproxy-mark 1<br>ip6tables -t mangle -A SINGBOX6 -p tcp --dport 53 -j TPROXY --on-port 12345 --tproxy-mark 1<br>ip6tables -t mangle -A SINGBOX6 -d ::1/128 -j RETURN<br>ip6tables -t mangle -A SINGBOX6 -d fc00::/18 -p tcp -j TPROXY --on-port 12345 --tproxy-mark 1<br>ip6tables -t mangle -A SINGBOX6 -d fc00::/18 -p udp -j TPROXY --on-port 12345 --tproxy-mark 1<br>ip6tables -t mangle -A PREROUTING -j SINGBOX6<br><br>ip6tables -t mangle -N SINGBOX6_SELF<br>ip6tables -t mangle -A SINGBOX6_SELF -m mark --mark 2 -j RETURN<br>ip6tables -t mangle -A SINGBOX6_SELF -d fc00::/18 -p udp -j MARK --set-mark 1<br>ip6tables -t mangle -A SINGBOX6_SELF -d fc00::/18 -p tcp -j MARK --set-mark 1<br>ip6tables -t mangle -A OUTPUT -j SINGBOX6_SELF<br></code></pre></td></tr></table></figure>
@@ -488,6 +507,21 @@
 
 
 
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
 
 
 
