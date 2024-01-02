@@ -24,7 +24,7 @@
 <meta property="og:description" content="老实说，3202 年要提供使用家里云对外提供 web服务，直接用 ipv6 就好了 事实上，我本来也是如此，但毕竟还是要和某些只有 ipv4 的“小可爱”做朋友的，在受够了教别人如何开启 ipv6 后，我决定寻求无公网  ipv4 支持家里云双栈访问的方法 探索和理论方案选择我家里是移动宽带，申请公网 ipv4 是不用想了 那么，一种简单的想法是通过一台双栈的主机以实现 4to6 的转换 但鉴于国">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-10-15T04:33:46.000Z">
-<meta property="article:modified_time" content="2023-10-27T10:48:54.869Z">
+<meta property="article:modified_time" content="2024-01-02T14:19:30.335Z">
 <meta property="article:author" content="江哲心">
 <meta property="article:tag" content="Network">
 <meta property="article:tag" content="NAT">
@@ -287,7 +287,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2023年10月27日 晚上
+                    本文最后更新于：2024年1月2日 晚上
                   
                 
               </p>
@@ -319,8 +319,8 @@
 <p>以下是网络架构的思路：</p>
 <ol>
 <li>natmap 实现 NAT 穿越，并获取 NAT 出口的 IP 和端口</li>
-<li>IP 使用 DDNS 绑定域名<code>v4.homecloud.com</code>，端口上报到 302 服务器<code>302.cloudhome.com</code></li>
-<li>302 服务器将每个访问<code>https://302.homg.cloud/path?search=</code> 302 跳转到 <code>https://v4.homecloud.com:$&#123;port&#125;/path?search=</code></li>
+<li>IP 使用 DDNS 绑定域名<code>v4.homecloud.com</code>，端口上报到 302 服务器<code>302.homecloud.com</code></li>
+<li>302 服务器将每个访问<code>https://302.homecloud.com/path?search=</code> 302 跳转到 <code>https://v4.homecloud.com:$&#123;port&#125;/path?search=</code></li>
 </ol>
 <p>注意到 302 服务器仅完成 302 跳转，所以无论使用国内云服务器（低延迟小带宽），还是国外服务器（高延迟），都不影响访问体验！</p>
 <p>当然，我决定更进一步，302 这点事完全可以交给 cloudflare workers</p>
@@ -445,6 +445,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/posts/%E8%AF%B7%E6%8B%92%E7%BB%9D%E4%BD%BF%E7%94%A8b23-tv%E9%93%BE%E6%8E%A5/" title="请拒绝使用b23.tv链接">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">请拒绝使用b23.tv链接</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
