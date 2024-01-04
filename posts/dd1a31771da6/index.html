@@ -12,6 +12,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
   <meta name="theme-color" content="#2f4154">
   <meta name="author" content="江哲心">
   <meta name="keywords" content="">
@@ -19,7 +21,7 @@
     <meta name="description" content="老实说，3202 年要提供使用家里云对外提供 web服务，直接用 ipv6 就好了 事实上，我本来也是如此，但毕竟还是要和某些只有 ipv4 的“小可爱”做朋友的，在受够了教别人如何开启 ipv6 后，我决定寻求无公网  ipv4 支持家里云双栈访问的方法 探索和理论方案选择我家里是移动宽带，申请公网 ipv4 是不用想了 那么，一种简单的想法是通过一台双栈的主机以实现 4to6 的转换 但鉴于国">
 <meta property="og:type" content="article">
 <meta property="og:title" content="fullcone-nat模式下提供web服务">
-<meta property="og:url" content="https://caiminoyume.github.io/posts/fullcone-nat%E6%A8%A1%E5%BC%8F%E4%B8%8B%E6%8F%90%E4%BE%9Bweb%E6%9C%8D%E5%8A%A1/">
+<meta property="og:url" content="https://caiminoyume.github.io/posts/dd1a31771da6/">
 <meta property="og:site_name" content="柴米の拾光">
 <meta property="og:description" content="老实说，3202 年要提供使用家里云对外提供 web服务，直接用 ipv6 就好了 事实上，我本来也是如此，但毕竟还是要和某些只有 ipv4 的“小可爱”做朋友的，在受够了教别人如何开启 ipv6 后，我决定寻求无公网  ipv4 支持家里云双栈访问的方法 探索和理论方案选择我家里是移动宽带，申请公网 ipv4 是不用想了 那么，一种简单的想法是通过一台双栈的主机以实现 4to6 的转换 但鉴于国">
 <meta property="og:locale" content="zh_CN">
@@ -163,9 +165,9 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/about/">
-                <i class="iconfont icon-user-fill"></i>
-                <span>关于</span>
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
               </a>
             </li>
           
@@ -175,20 +177,13 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/links/">
-                <i class="iconfont icon-link-fill"></i>
-                <span>友链</span>
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
               </a>
             </li>
           
         
-        
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
-              <i class="iconfont icon-search"></i>
-            </a>
-          </li>
-          
         
         
           <li class="nav-item" id="color-toggle-btn">
@@ -245,7 +240,7 @@
         
         
         
-          36 分钟
+          3 分钟
         
       </span>
     
@@ -396,7 +391,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>fullcone-nat模式下提供web服务</div>
-      <div>https://caiminoyume.github.io/posts/fullcone-nat模式下提供web服务/</div>
+      <div>https://caiminoyume.github.io/posts/dd1a31771da6/</div>
     </div>
     <div class="license-meta">
       
@@ -411,6 +406,11 @@
           <div>2023年10月15日</div>
         </div>
       
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2024年1月2日</div>
+        </div>
       
       
         <div class="license-meta-item">
@@ -450,7 +450,7 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/posts/%E6%88%91%E6%9C%89%E7%89%B9%E6%AE%8A%E7%9A%84%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E9%85%8D%E7%BD%AE%E5%92%8C%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/" title="我有特殊的透明代理配置和使用技巧">
+                      <a href="/posts/7f2fedef9809/" title="我有特殊的透明代理配置和使用技巧">
                         <span class="hidden-mobile">我有特殊的透明代理配置和使用技巧</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -528,28 +528,6 @@
         <i class="iconfont icon-arrowup" aria-hidden="true"></i>
       </a>
     
-
-    
-      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
-        </div>
-        <div class="list-group" id="local-search-result"></div>
-      </div>
-    </div>
-  </div>
-</div>
 
     
 
@@ -750,8 +728,6 @@
     
 
   <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
-
-  <script  src="/js/local-search.js" ></script>
 
 
 

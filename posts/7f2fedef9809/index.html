@@ -12,6 +12,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
   <meta name="theme-color" content="#2f4154">
   <meta name="author" content="江哲心">
   <meta name="keywords" content="">
@@ -19,7 +21,7 @@
     <meta name="description" content="鉴于大部分人在透明代理中对 DNS 的行为一知半解，而 DNS 作为互联网连接的第一步，却被许多人一直忽视，令我感到十分不可思议。合理的 DNS 处理不仅能提高核心性能，防止代理 BT 流量，甚至能绕过 GFW 的封锁，实现 no-proxy 访问（本文并未涉及，敬请期待之后的文章） 讨论的范围 假设需要做 proxy direct block 三种类型的分流，且已有完善的 geosite 本文仅">
 <meta property="og:type" content="article">
 <meta property="og:title" content="我有特殊的透明代理配置和使用技巧">
-<meta property="og:url" content="https://caiminoyume.github.io/posts/%E6%88%91%E6%9C%89%E7%89%B9%E6%AE%8A%E7%9A%84%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E9%85%8D%E7%BD%AE%E5%92%8C%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/">
+<meta property="og:url" content="https://caiminoyume.github.io/posts/7f2fedef9809/">
 <meta property="og:site_name" content="柴米の拾光">
 <meta property="og:description" content="鉴于大部分人在透明代理中对 DNS 的行为一知半解，而 DNS 作为互联网连接的第一步，却被许多人一直忽视，令我感到十分不可思议。合理的 DNS 处理不仅能提高核心性能，防止代理 BT 流量，甚至能绕过 GFW 的封锁，实现 no-proxy 访问（本文并未涉及，敬请期待之后的文章） 讨论的范围 假设需要做 proxy direct block 三种类型的分流，且已有完善的 geosite 本文仅">
 <meta property="og:locale" content="zh_CN">
@@ -162,9 +164,9 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/about/">
-                <i class="iconfont icon-user-fill"></i>
-                <span>关于</span>
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
               </a>
             </li>
           
@@ -174,20 +176,13 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/links/">
-                <i class="iconfont icon-link-fill"></i>
-                <span>友链</span>
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
               </a>
             </li>
           
         
-        
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
-              <i class="iconfont icon-search"></i>
-            </a>
-          </li>
-          
         
         
           <li class="nav-item" id="color-toggle-btn">
@@ -244,7 +239,7 @@
         
         
         
-          35 分钟
+          3 分钟
         
       </span>
     
@@ -382,7 +377,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>我有特殊的透明代理配置和使用技巧</div>
-      <div>https://caiminoyume.github.io/posts/我有特殊的透明代理配置和使用技巧/</div>
+      <div>https://caiminoyume.github.io/posts/7f2fedef9809/</div>
     </div>
     <div class="license-meta">
       
@@ -397,6 +392,11 @@
           <div>2023年10月6日</div>
         </div>
       
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2023年12月4日</div>
+        </div>
       
       
         <div class="license-meta-item">
@@ -432,7 +432,7 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/posts/fullcone-nat%E6%A8%A1%E5%BC%8F%E4%B8%8B%E6%8F%90%E4%BE%9Bweb%E6%9C%8D%E5%8A%A1/" title="fullcone-nat模式下提供web服务">
+                      <a href="/posts/dd1a31771da6/" title="fullcone-nat模式下提供web服务">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">fullcone-nat模式下提供web服务</span>
                         <span class="visible-mobile">上一篇</span>
@@ -442,7 +442,7 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/posts/http3%E7%9B%B4%E8%BF%9EYouTube%E8%A7%82%E5%BD%B1%EF%BC%9F/" title="http3直连YouTube观影？">
+                      <a href="/posts/5f0d0d46c63b/" title="http3直连YouTube观影？">
                         <span class="hidden-mobile">http3直连YouTube观影？</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -535,28 +535,6 @@
         <i class="iconfont icon-arrowup" aria-hidden="true"></i>
       </a>
     
-
-    
-      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
-        </div>
-        <div class="list-group" id="local-search-result"></div>
-      </div>
-    </div>
-  </div>
-</div>
 
     
 
@@ -757,8 +735,6 @@
     
 
   <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
-
-  <script  src="/js/local-search.js" ></script>
 
 
 
